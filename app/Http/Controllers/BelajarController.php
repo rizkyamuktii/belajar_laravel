@@ -2,14 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;            
+use Illuminate\Http\Request;
 
 class BelajarController extends Controller
 {
-    public function index () {
+    public function index()
+    {
         return view("counting");
     }
-    public function greeting ()
+    public function indexKurang()
+    {
+        return view("kurang");
+    }
+    public function indexKali()
+    {
+        return view("kali");
+    }
+    public function indexBagi()
+    {
+        return view("bagi");
+    }
+    public function greeting()
     {
         return "Selamat datang di Kelas Laravel";
     }
@@ -19,7 +32,37 @@ class BelajarController extends Controller
         $nilai1 = 5;
         $nilai2 = 7;
         $hasil = $nilai1 + $nilai2;
+
+        return "$nilai1 + $nilai2 = $hasil";
+    }
+    public function kurang(Request $request)
+    {
+        $angka1 = $request->angka1;
+        $angka2 = $request->angka2;
+        $hasilKurang = $angka1 - $angka2;
+
+        return view('kurang', compact('hasilKurang'));
+    }   
+    public function kali(Request $request)
+    {
+        $angka1 = $request->angka1;
+        $angka2 = $request->angka2;
+        $hasilKali = $angka1 * $angka2;
+
+        return view('kali', compact('hasilKali'));
+    }
+    public function bagi(Request $request)
+    {
+        $angka1 = $request->angka1;
+        $angka2 = $request->angka2;
+        if ($angka2 == 0 || empty($angka2)) {
+            $hasilBagi = 0;
+        } else {
+            $hasilBagi = $angka1 / $angka2;
+        }
+
         
-        return "Hasil dari penjumlahan $nilai1 + $nilai2 = $hasil";
+
+        return view('bagi', compact('hasilBagi'));
     }
 }

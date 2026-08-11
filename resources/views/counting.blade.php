@@ -6,12 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+
 <body>
     <h1>Hitungan Anak SD</h1>
     <a href="{{ url('hitung-tambah') }}">Tambah</a>
-    <a href="">Kurang</a>
-    <a href="">Kali</a>
-    <a href="">Bagi</a>
+    <a href="{{ url('hitung-kurang') }}">Kurang</a>
+    <a href="{{ url('hitung-kali') }}">Kali</a>
+    <a href="{{ url('hitung-bagi') }}">Bagi</a>
 
 </body>
+
 </html>
