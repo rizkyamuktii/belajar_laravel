@@ -1,6 +1,7 @@
 @extends('app')
 @section('content')
   <form action="{{ route('store-peserta') }}" method="post" class="form form-control">
+    @csrf
     <div class="mb-3">
       <label for="" class="form-label">Nama</label>
       <input type="text" class="form form-control" name="nama" required>
