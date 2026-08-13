@@ -61,15 +61,35 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $title = "Edit product";
+        $categories = Category::get();
+        $edit = Product::find(id);
+        //$edit = product::findOrFail($id) //404
+        return view('product.edit', compact('title', 'categories', 'edit'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        //
+         $data = [
+            'name' => $request->name,
+            'category_id' => $request->category_id,
+            'price' => $request->price,
+            'description' => $request->description
+        ];
+
+        if($request->hasFile('photo')){
+            if($product->photo){
+                Storage::disk('public')->delete($product->photo);
+            }
+
+            $data['photo'] = $request->file('photo')->store('products', 'public');
+        }
+
+        $product->update($data);
+        return redirect()->to('product')->with('success', 'Update product success');
     }
 
     /**
