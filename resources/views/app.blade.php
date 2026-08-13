@@ -169,9 +169,11 @@
     <aside class="sidebar">
         <div class="sidebar-brand">AdminPanel</div>
         <ul class="sidebar-menu">
-            <li><a href="{{ url('peserta') }}">Dashboard</a></li>
+            <li><a href="#" class="active">Dashboard</a></li>
+            <li><a href="{{ url('peserta') }}">Peserta</a></li>
             <li><a href="{{ url('role') }}">Role</a></li>
-            <li><a href="#">Produk</a></li>
+            <li><a href="{{ route('product.index') }}">Produk</a></li>
+            <li><a href="{{ route('category.index') }}">Category</a></li>
             <li><a href="#">Pesanan</a></li>
             <li><a href="#">Pengaturan</a></li>
         </ul>
@@ -183,14 +185,14 @@
         <header class="navbar">
             <div><strong>Dashboard Overview</strong></div>
             <div class="user-profile">
-                <span>Admin User</span>
+                <span>{{ auth()->user()->name }}</span>
                 <div class="avatar">A</div>
             </div>
         </header>
 
         <!-- Content -->
         <main class="content">
-            <h1 class="page-title">{{ $title }}</h1>
+            <h1 class="page-title">{{ $title ??''}}</h1>
             @yield('content')
         </main>
 
