@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -19,7 +21,9 @@ class OrderController extends Controller
      */
     public function create()
     {
-        return view('order.create');
+        $categories = Category::get();
+        $products = Product::orderBy('id')->get();
+        return view('order.create', compact('categories', 'products'));
     }
 
     /**

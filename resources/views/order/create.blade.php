@@ -31,8 +31,13 @@
         .product-image {
             height: 130px;
             display: flex;
-            align-items: center;
+            /* align-items: center; */
             justify-content: center;
+        }
+
+        .product-image img {
+            object-fit: cover;
+            /* width: 100%; */
         }
 
         .price {
@@ -146,30 +151,32 @@
                                 <button class="btn btn-dark btn-sm me-1 category-btn">
                                     All
                                 </button>
-                                <button class="btn btn-dark btn-sm me-1 category-btn">
-                                    Makanan
-                                </button>
-                                <button class="btn btn-dark btn-sm me-1 category-btn">
-                                    Minuman
-                                </button>
+                                @foreach ($categories as $category)
+                                    <button class="btn btn-dark btn-sm me-1 category-btn">
+                                        {{ $category->name ?? '' }}
+                                    </button>
+                                @endforeach
                             </div>
 
                             <div class="row g-3" id="productList">
-                                <div class="col-md-4 col-sm-6">
-                                    <div class="card product-card shadow h-100">
-                                        <div class="product-image">
-                                            This is Image Product
-                                        </div>
-                                        <div class="card-body">
-                                            <span class="badge bgt-light text-dark mb-2">
-                                                Category Product
-                                            </span>
-                                            <h6 class="fw-bold">Product Name</h6>
-                                            <span class="price">Product Price</span>
+                                @foreach ($products as $product)
+
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="card product-card shadow h-100">
+                                            <div class="product-image">
+                                                <img src="{{ asset('storage/' . $product->photo) }}" alt="">
+                                            </div>
+                                            <div class="card-body">
+                                                <span class="badge bgt-light text-dark mb-2">
+                                                    {{ $product->category->name ??'' }}
+                                                </span>
+                                                <h6 class="fw-bold">{{ $product->name ??'' }}</h6>
+                                                <span class="price"> Rp.
+                                                    {{ number_format($product->price, 0) }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
+                                @endforeach
                             </div>
 
                         </div>
@@ -179,31 +186,37 @@
 
                 <div class="col-lg-4">
                     <div class="card border-0 shadow cart-box">
-                        <div class="d-flex justify-content-between mb-3">
-                            <h5 class="fw-bold mb-0">
-                                <i class="bi bi-cart"></i>Cart
-                            </h5>
-                            <span class="badge bg-dark" id="cartCount">0</span>
-                        </div>
-                        <div class="mb-3" id="cartItems">
-                            <div class="text-center text-muted py-5">
-                                <i class="bi bi-cart4"></i>
-                                <p>Empty Cart</p>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5 class="fw-bold mb-0">
+                                    <i class="bi bi-cart"></i>Cart
+                                </h5>
+                                <span class="badge bg-dark" id="cartCount">0</span>
                             </div>
+
+                            <div class="mb-3" id="cartItems">
+                                <div class="text-center text-muted py-5">
+                                    <i class="bi bi-cart4"></i>
+                                    <p>Empty Cart</p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Sub Total</span>
+                                <strong id="subTotal">Rp0</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Pajak (10%)</span>
+                                <strong id="subTotal">Rp0</strong>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-bold">Total</span>
+                                <span class="total-price" id="total">Rp.0</span>
+                            </div>
+
+                            <button class="btn btn-success w-100 py-3">Payment</button>
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Sub Total</span>
-                            <strong id="subTotal">Rp0</strong>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Pajak (10%)</span>
-                            <strong id="subTotal">Rp0</strong>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="fw-bold">Total</span>
-                            <span class="total-price" id="total">Rp.0</span>
-                        </div>
-                        <button class="btn btn-success w-100 py-3">Payment</button>
                     </div>
                 </div>
             </div>
