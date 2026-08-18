@@ -7,8 +7,10 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+// use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', [LoginController::class, 'login']);
 Route::get('login', [LoginController::class, 'login'])->name('login');
@@ -44,12 +46,22 @@ Route::put('update/{id}', [PesertaController::class, 'update'])->name('update.pe
 Route::delete('delete/{id}', [PesertaController::class, 'delete'])->name('delete.peserta');
 
 //middleware: 
-Route::middleware('auth')->group(function(){
+//  Route::middleware('auth')->group(function () {
+//     Route::resource('dashboard', DashboardController::class);
+//     Route::resource('role', RoleController::class);
+//     Route::resource('category', CategoryController::class);
+//     Route::resource('product', ProductController::class);
+//     Route::resource('setting', SettingController::class);
+//     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+// });
+
+Route::middleware('auth')->group(function () {
     Route::resource('dashboard', DashboardController::class);
     Route::resource('role', RoleController::class);
     Route::resource('category', CategoryController::class);
     Route::resource('product', ProductController::class);
-    Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+    Route::resource('order', OrderController::class);
+    Route::resource('setting', SettingController::class);
 });
 
-//Role
+//Role 

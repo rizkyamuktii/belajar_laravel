@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -13,7 +14,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $title = "Data Product";
+        //
+        $title = 'Product Data';
         $products = Product::with('category')->orderBy('id', 'DESC')->get();
         return view('product.index', compact('title', 'products'));
     }
@@ -23,7 +25,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $title = "Create New Product";
+        //
+        $title = 'Create Product Data';
         $categories = Category::get();
         return view('product.create', compact('title', 'categories'));
     }
@@ -33,19 +36,21 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        //
         $data = [
-            'name' => $request->name,
             'category_id' => $request->category_id,
+            'name' => $request->name,
             'price' => $request->price,
             'description' => $request->description
         ];
-        //jika user mengupload photo 
+
+        // Jika User mengupload data
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('products', 'public');
         }
 
-        product::create($data);
-        return redirect()->to('product')->with('success', 'Create product success');
+        Product::create($data);
+        return redirect()->to('product')->with('success', 'Create product successfully!');
     }
 
     /**
@@ -54,6 +59,8 @@ class ProductController extends Controller
     public function show(string $id)
     {
         //
+        $title = 'Show Data';
+        return view('product.index', compact('title'));  
     }
 
     /**
@@ -61,10 +68,11 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        $title = "Edit product";
+        //
+        $title = "Edit Product";
         $categories = Category::get();
-        $edit = Product::find(id);
-        //$edit = product::findOrFail($id) //404
+        // $edit = Product::find($id); Blank
+        $edit = Product::findOrFail($id); // 404 Not Found
         return view('product.edit', compact('title', 'categories', 'edit'));
     }
 
@@ -73,30 +81,32 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-         $data = [
-            'name' => $request->name,
+        //
+        $data = [
             'category_id' => $request->category_id,
+            'name' => $request->name,
             'price' => $request->price,
             'description' => $request->description
         ];
 
-        if($request->hasFile('photo')){
-            if($product->photo){
+        if ($request->hasFile('photo')) {
+            if ($product->photo) {
                 Storage::disk('public')->delete($product->photo);
             }
-
-            $data['photo'] = $request->file('photo')->store('products', 'public');
+            $data['photo'] = $request->file('photo')->store('product', 'public');
         }
-
         $product->update($data);
-        return redirect()->to('product')->with('success', 'Update product success');
+        return redirect()->to('product')->with('success', 'Update product successfully!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+         Storage::disk('public')->delete($product->photo);
+         $product->delete();
+
+         return redirect()->to('product')->with('success', 'Delete Berhasil');
     }
 }
