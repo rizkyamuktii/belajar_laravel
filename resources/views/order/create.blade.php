@@ -16,6 +16,10 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
+        .product-item {
+            cursor: pointer;
+        }
+
         .product-card {
             border: none;
             border-radius: 15px;
@@ -148,11 +152,14 @@
                             </div>
 
                             <div class="mb-4">
-                                <button class="btn btn-dark btn-sm me-1 category-btn">
+                                <button class="btn btn-dark btn-sm me-1 category-btn"
+                                    onclick="filterCategory('all', 'this')" data-category="all">
                                     All
                                 </button>
                                 @foreach ($categories as $category)
-                                    <button class="btn btn-dark btn-sm me-1 category-btn">
+                                    <button class="btn btn-light btn-outline-dark btn-sm me-1 category-btn"
+                                        onclick="filterCategory('{{ $category->id }}', this)"
+                                        data-category="{{ $category->id }}">
                                         {{ $category->name ?? '' }}
                                     </button>
                                 @endforeach
@@ -160,17 +167,18 @@
 
                             <div class="row g-3" id="productList">
                                 @foreach ($products as $product)
-
-                                    <div class="col-md-4 col-sm-6">
+                                    <div class="col-md-4 col-sm-6 product-item" data-category="{{ $product->category_id }}"
+                                        data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                                        data-price="{{ $product->price }}" onclick="addToCart({{ $product->id }})">
                                         <div class="card product-card shadow h-100">
                                             <div class="product-image">
                                                 <img src="{{ asset('storage/' . $product->photo) }}" alt="">
                                             </div>
                                             <div class="card-body">
-                                                <span class="badge bgt-light text-dark mb-2">
-                                                    {{ $product->category->name ??'' }}
+                                                <span class="badge bg-light text-dark mb-2">
+                                                    {{ $product->category->name }}
                                                 </span>
-                                                <h6 class="fw-bold">{{ $product->name ??'' }}</h6>
+                                                <h6 class="fw-bold">{{ $product->name ?? '' }}</h6>
                                                 <span class="price"> Rp.
                                                     {{ number_format($product->price, 0) }}</span>
                                             </div>
@@ -222,6 +230,69 @@
             </div>
         </main>
     </div>
+
+    <script>
+        const products = @json($product -> map(function ($product) {
+            return {
+                'id'=> $product -> id',
+                'name'=> $product -> name',
+        'category_id'=> $product -> category_id',
+        'category_name'=> $product -> category_name',
+        'price'=> $product -> price',
+            }
+        }))
+
+        function filterCategory(categoryId, button) {
+            // selectorAll = array
+            const products = document.querySelectorAll('.product-item');
+            products.forEach(function (product) {
+                const categoryName = product.dataset.category;
+                // jika user click category bernama all, muncul category all
+                // jika user click category snack, muncul category snack
+                if (categoryId === 'all' || categoryName === String(categoryId)) {
+                    product.style.display = "";
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+
+            //ketika user reset category
+            document.querySelectorAll('.category-btn').forEach(function (btn) {
+                btn.classList.remove('btn-dark', 'active');
+                btn.classList.add('btn-outline-dark');
+            });
+
+            //ketika user milih category
+            button.classList.remove('btn-outline-dark');
+            button.classList.add('btn-dark', 'active');
+        }
+
+        function addToCart(productId) {
+            let cart = [];
+            const products = document.querySelector(`.product-item`);
+
+            const productCard = products.closest('.product-item');
+            const productName = productCard.dataset.name;
+            const productPrice = productCard.dataset.price;
+
+            const existingItem = cart.find(function (item) {
+                return Number(item.id) === Number(productId);
+            });
+
+            if (existingItem) {
+                existingItem.qty++;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    qty: 1,
+                })
+            }
+
+            console.log(productId);
+        }
+    </script>
 </body>
 
 </html>
